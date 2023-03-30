@@ -6,56 +6,49 @@
 //
 //**********************************
 
+#include <queue>
 #include <iostream>
 #include <cmath>
 #include <cstdlib>
 #include <ctime>
+#include <random>
+#include <chrono>
+#include <thread>
+#include <windows.h>
 
-struct process {
-    float arrivalTime;
-    float serviceTime;
-    float remainingServiceTime;
-    int priority;
+
+
+using namespace std;
+
+
+// Define the process structure
+struct Process {
+    int id;
+    double arrival_time;
+    double service_time;
+    double start_time;
+    double end_time;
+    double turnaround_time;
 };
 
-struct event {
-    int type;
-    float time;
-    event* nextEvent;
-    process* p;
+// Define the Event structure
+struct Event {
+    double time;
+    int type; // 1: process arrival, 2: process completion
+    Process process;
 };
 
-int main() {
-    
-    // Init
-    int lamda = 10;
-    int clock = 0;
-    bool serverIdle = true;
-    int readyQueueCount = 0;
+// Define a custom comparator for the Event priority queue
+struct EventComparator {
+    bool operator() (const Event& e1, const Event& e2) {
+        return e1.time > e2.time; // sort events in ascending order of time
+    }
+};
 
-    //generate seed
-    srand((unsigned) time(NULL));
+// Define the state of the system
+struct SystemState {
+    int num_processes_in_queue;
+    bool cpu_busy;
+    Process current_process;
+};
 
-    double randy;
-    randy = (double)rand() / RAND_MAX;
-
-    std::cout << randy << std::endl; 
-
-    // // need to gen 10,000 processes
-    // int processCount = 0;
-    // while (processCount < 10000) {
-        
-    //     event *e1 = new event;
-    //     event *e2 = new event;
-    //     e1->type = 0;
-    //     e1->time = 0; //gen
-    //     e1->nextEvent = e2;
-
-    //     float arrTime = (-(1/lamda) * log());
-
-
-    //     processCount++;
-    // }
-
-    return 0;
-}
