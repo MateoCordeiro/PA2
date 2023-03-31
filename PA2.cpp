@@ -134,8 +134,19 @@ double interArrivalTimes(double lambda) {
     return abs(((1/lambda)*(log((double)rand() / (double)RAND_MAX))));
 }
 
-double serviceTime(double lambda) {
+double serviceTime() {
     return (0.04 * -log(1 - ((double)rand() / (double)RAND_MAX)));
+}
+
+/////////////////////////////////////////////////////////////////////////
+// CPU Processor
+/////////////////////////////////////////////////////////////////////////
+
+void processor() {
+
+    bool state = false;
+    int numInQ = 0;
+
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -145,29 +156,28 @@ double serviceTime(double lambda) {
 int main() {
     PriorityQueue pq;
 
-    // Add some events to the priority queue
-    Process p1 = {1, 0.0, 5.0, 0.0, 0.0, 0.0};
-    Event e1 = {p1.arrival_time, 1, p1};
-    pq.insert(e1, p1);
+    // // Add some events to the priority queue
+    // Process p1 = {1, 0.0, 5.0, 0.0, 0.0, 0.0};
+    // Event e1 = {p1.arrival_time, 1, p1};
+    // pq.insert(e1, p1);
 
-    Process p2 = {2, 2.0, 3.0, 0.0, 0.0, 0.0};
-    Event e2 = {p2.arrival_time, 1, p2};
-    pq.insert(e2, p2);
+    // Process p2 = {2, 2.0, 3.0, 0.0, 0.0, 0.0};
+    // Event e2 = {p2.arrival_time, 1, p2};
+    // pq.insert(e2, p2);
 
-    Process p3 = {3, 4.0, 4.0, 0.0, 0.0, 0.0};
-    Event e3 = {p3.arrival_time, 1, p3};
-    pq.insert(e3, p3);
+    // Process p3 = {3, 4.0, 4.0, 0.0, 0.0, 0.0};
+    // Event e3 = {p3.arrival_time, 1, p3};
+    // pq.insert(e3, p3);
 
-    Process p4 = {4, 5.0, 2.0, 0.0, 0.0, 0.0};
-    Event e4 = {p4.arrival_time, 1, p4};
-    pq.insert(e4, p4);
+    // Process p4 = {4, 5.0, 2.0, 0.0, 0.0, 0.0};
+    // Event e4 = {p4.arrival_time, 1, p4};
+    // pq.insert(e4, p4);
 
-    // Print out the events in the priority queue
-    //pq.print();
+    // // Print out the events in the priority queue
+    pq.print();
 
     double lambda = 10;
     double totalArrivalTime = 0;
-    double arrivalTime = 0;
 
     bool seeded=false;
     if (!seeded)
@@ -175,39 +185,39 @@ int main() {
         srand(time(nullptr));
         seeded=true;
     }
-    
-    cout << "0-1 generator" << "\n";
-    cout << (double)rand() / (double)RAND_MAX << endl; 
 
+    double current_time = 0;
+    for (int i = 1; i <= 5000; i++) {
+        // Generate arrival event
+        Process process;
+        process.id = i;
+        process.arrival_time = current_time + interArrivalTimes(lambda);
+        process.service_time = serviceTime();
+        process.end_time = 0;
+        process.turnaround_time = 0;
+        Event arrival_event;
+        arrival_event.time = process.arrival_time;
+        arrival_event.type = 1; // arrival
+        arrival_event.process = process;
 
-    cout << "interarrival time generator" << "\n";
-    cout << interArrivalTimes(lambda) << endl;
-    cout << interArrivalTimes(lambda) << "\n"<< endl;
+        // Generate departure event
+        Process process_copy = process; // make a copy to store in departure event
+        Event departure_event;
+        departure_event.time = process.arrival_time + process.service_time;
+        departure_event.type = 2; // departure
 
-    cout << "arrivale time getting added up " << "\n";
-    totalArrivalTime += interArrivalTimes(lambda);
-    cout << totalArrivalTime << endl;
-    totalArrivalTime += interArrivalTimes(lambda);
-    cout << totalArrivalTime << endl;
-    totalArrivalTime += interArrivalTimes(lambda);
-    cout << totalArrivalTime << "\n" << endl;
-    totalArrivalTime += interArrivalTimes(lambda);
+        pq.insert(arrival_event, process);
+        pq.insert(departure_event, process);
 
-    cout << "service time generator" << "\n";
-    cout << serviceTime(lambda) << endl;
-    cout << serviceTime(lambda) << endl;
-    cout << serviceTime(lambda) << "\n" << endl;
-
-    int i = 0;
-    double total = 0;
-    int countToo = 10000;
-    while (i < countToo)
-    {
-        total += serviceTime(lambda);
-        i++;   
+        current_time = process.arrival_time;
     }
-    cout << "service time average generator" << "\n";
-    cout << total / countToo << endl;
+
+    pq.print();
+
+////////////////////////////////////////////
+
+    double worldClock = 0;
+
 
     return 0;
 }
