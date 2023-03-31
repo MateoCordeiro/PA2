@@ -19,6 +19,10 @@
 
 using namespace std;
 
+/////////////////////////////////////////////////////////////////////////
+// Structs
+/////////////////////////////////////////////////////////////////////////
+
 // Define the process structure
 struct Process {
     int id;
@@ -42,7 +46,7 @@ struct Node {
 };
 
 /////////////////////////////////////////////////////////////////////////
-// Priority QUEUE
+// Priority Queue
 /////////////////////////////////////////////////////////////////////////
 
 class PriorityQueue {
@@ -115,9 +119,27 @@ public:
     }
 };
 
+/////////////////////////////////////////////////////////////////////////
+// Number generators
+/////////////////////////////////////////////////////////////////////////
+
+double factorial(double n)
+{
+    if (n == 0)
+        return 1;
+    return n * factorial(n - 1);
+}
+
+double interArrivalTimes(double lambda) {
+    return abs(((1/lambda)*(log((double)rand() / (double)RAND_MAX))));
+}
+
+double serviceTime(double lambda) {
+    return (0.04 * -log(1 - ((double)rand() / (double)RAND_MAX)));
+}
 
 /////////////////////////////////////////////////////////////////////////
-// MAIN
+// Main
 /////////////////////////////////////////////////////////////////////////
 
 int main() {
@@ -141,7 +163,51 @@ int main() {
     pq.insert(e4, p4);
 
     // Print out the events in the priority queue
-    pq.print();
+    //pq.print();
+
+    double lambda = 10;
+    double totalArrivalTime = 0;
+    double arrivalTime = 0;
+
+    bool seeded=false;
+    if (!seeded)
+    {
+        srand(time(nullptr));
+        seeded=true;
+    }
+    
+    cout << "0-1 generator" << "\n";
+    cout << (double)rand() / (double)RAND_MAX << endl; 
+
+
+    cout << "interarrival time generator" << "\n";
+    cout << interArrivalTimes(lambda) << endl;
+    cout << interArrivalTimes(lambda) << "\n"<< endl;
+
+    cout << "arrivale time getting added up " << "\n";
+    totalArrivalTime += interArrivalTimes(lambda);
+    cout << totalArrivalTime << endl;
+    totalArrivalTime += interArrivalTimes(lambda);
+    cout << totalArrivalTime << endl;
+    totalArrivalTime += interArrivalTimes(lambda);
+    cout << totalArrivalTime << "\n" << endl;
+    totalArrivalTime += interArrivalTimes(lambda);
+
+    cout << "service time generator" << "\n";
+    cout << serviceTime(lambda) << endl;
+    cout << serviceTime(lambda) << endl;
+    cout << serviceTime(lambda) << "\n" << endl;
+
+    int i = 0;
+    double total = 0;
+    int countToo = 10000;
+    while (i < countToo)
+    {
+        total += serviceTime(lambda);
+        i++;   
+    }
+    cout << "service time average generator" << "\n";
+    cout << total / countToo << endl;
 
     return 0;
 }
