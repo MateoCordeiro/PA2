@@ -149,21 +149,21 @@ int main() {
 
 ////////////////////////////////////////////
 
-    // double worldClock = 0;
-    // Process p1;
-    // p1.id = 0;
-    // p1.arrival_time = 0;
-    // p1.service_time = 1;
-    // p1.start_time = 0;
-    // p1.end_time = 1;
-    // p1.turnaround_time = 1;
-    // Event e1;
-    // e1.time = 1;
-    // e1.type = 1;
-    // e1.process = p1;
+    double worldClock = 0;
+    Process p1;
+    p1.id = 0;
+    p1.arrival_time = 0;
+    p1.service_time = 1;
+    p1.start_time = 0;
+    p1.end_time = 1;
+    p1.turnaround_time = 1;
+    Event e1;
+    e1.time = 1;
+    e1.type = 1;
+    e1.process = p1;
 
-    // pq.insert(e1, p1);
-    // processor(pq);
+    pq.insert(e1, p1);
+    processor(pq);
 
     FCFS fcfs;
     fcfs.init(10, .04, 1000);
